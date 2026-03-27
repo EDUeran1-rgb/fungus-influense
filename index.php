@@ -68,19 +68,62 @@ if(isset($_SESSION['mess'])){
                 </div>
             <?php } ?>
     </summary>
-    <div class="comments">
-        <pre></pre>
-    </div>
-     <?php if(islevel(10)) { ?>
     <div class="addcomment">
-        <pre><form class="addpost" action="/fungus-influense/add_post.php" method="POST">
+        <pre><form class="addpost" action="add_post.php" method="POST">
             <input type="hidden" name="parentid" value="<?=$row['id']?>">
-            <input type="submit" name="btnparent" value="Add">
+            <input type="submit" name="btnparent" value="Add Comment">
         </pre>
     </div>
-    <?php } ?>
-</details>
+    <div class="comments">
+        <pre><?php
+    $parid=$row['id'];
+    $sql2="SELECT * FROM tbl_posts WHERE parentid=$parid ORDER BY rating DESC"; 
+    $result2=mysqli_query($conn, $sql2);
+?>
+<?php while($row2=mysqli_fetch_assoc($result2)): ?>
+
+<div class="comment">
+    <div>
+        <div>
+            <h2><?=getUsername2($row2['userid'])?></h2>
+            <h4><?=$row2['text']?></h4></div> 
+            
+            <div class="filler"></div>
+            <?php if (showRating($row2['id']) !== false) { ?>
+                <div class="ratingdiv">Rated: <?=showRating($row2['id'])?> </div> 
+            <?php }else { ?>
+                <div class="ratingdiv">Not rated yet</div>
+            <?php } ?>
+            <?php if(islevel(10)) { ?>
+                <div id="ratearea">
+                    <?php if(!hasrated($row2['id'])){ 
+                        echo "<p>Rate this:</p>";
+                    }else{ 
+                        echo "<p>You have rated this:" . showpersonalscore($row2['id']) . ".<br> Update your rating:</p>";
+                     } ?>
+                    
+                    <form class="rate-form" action="index.php" method="POST">
+                        <input type="hidden" name="revid" value="<?=$row2['id']?>">
+                        <input type="hidden" name="revtype" value="post">
+                        <button  name="userrating" value="1" class="rate">1</button>
+                        <button  name="userrating" value="2" class="rate">2</button>
+                        <button  name="userrating" value="3" class="rate">3</button>
+                        <button  name="userrating" value="4" class="rate">4</button>
+                        <button  name="userrating" value="5" class="rate">5</button>
+                    </form>
+                    
+
+                </div>
+            <?php }  ?>
+        </div>
+    </div>
+</div>
 <?php endwhile; ?>
+</pre>
+    </div>
+</details>
+<?php endwhile;  ?>
+
 
     
 <?php require_once("_footer.php"); ?>

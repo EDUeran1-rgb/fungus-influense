@@ -5,13 +5,16 @@ $mess="";
 if(isset($_SESSION['mess'])){
     $mess=$_SESSION['mess'];
 }
+
+if(isset($_POST['btnparent'])){
+        $parentid=intval($_POST['parentid']);
+    } else {
+        $parentid=0;
+    }
 if(isset($_POST['btnAdd'])){
     $text=htmlentities($_POST['text']);
     $userid=$_SESSION['id'];
-    $parentid=0;
-    if(isset($_POST['parentid'])){
-        $parentid=intval($_POST['parentid']);
-    }
+    $parentid=htmlentities($_POST['parentid']);
     $sql="INSERT INTO tbl_posts (userid, text, parentid, parenttype ) VALUES ('$userid', '$text', $parentid,'none')";
     $result=mysqli_query($conn, $sql);
     header("Location: index.php");
@@ -34,6 +37,7 @@ if(isset($_POST['btnAdd'])){
     <main>
         <form action="add_post.php" method="POST">
             <input type="text" name="text" placeholder="Text" required>
+            <input type="hidden" name="parentid" value="<?=$parentid?>">
             <input type="submit" name="btnAdd" value="Add">
         </form>
     </main>

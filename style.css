@@ -259,3 +259,10 @@ a.addpost{
     gap:.3rem;
     height:fit-content;
 }
+.comment{
+    background: #0001;
+    padding: .5rem;
+    border-radius: .3rem;
+    padding: 0rem;
+    
+}
