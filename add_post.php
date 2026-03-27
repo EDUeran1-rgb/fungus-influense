@@ -8,8 +8,11 @@ if(isset($_SESSION['mess'])){
 if(isset($_POST['btnAdd'])){
     $text=htmlentities($_POST['text']);
     $userid=$_SESSION['id'];
-
-    $sql="INSERT INTO tbl_posts (userid, text, parentid, parenttype ) VALUES ('$userid', '$text', 0,'none')";
+    $parentid=0;
+    if(isset($_POST['parentid'])){
+        $parentid=intval($_POST['parentid']);
+    }
+    $sql="INSERT INTO tbl_posts (userid, text, parentid, parenttype ) VALUES ('$userid', '$text', $parentid,'none')";
     $result=mysqli_query($conn, $sql);
     header("Location: index.php");
 }

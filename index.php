@@ -29,7 +29,7 @@ if(isset($_SESSION['mess'])){
 <?php } ?>
 
 <?php
-    $sql="SELECT * FROM tbl_posts ORDER BY rating DESC"; 
+    $sql="SELECT * FROM tbl_posts WHERE parentid='0' ORDER BY rating DESC"; 
     $result=mysqli_query($conn, $sql);
 ?>
 <?php while($row=mysqli_fetch_assoc($result)): ?>
@@ -68,12 +68,17 @@ if(isset($_SESSION['mess'])){
                 </div>
             <?php } ?>
     </summary>
-    <div class="ingredients">
+    <div class="comments">
         <pre></pre>
     </div>
-    <div class="recipe">
-        <pre></pre>
+     <?php if(islevel(10)) { ?>
+    <div class="addcomment">
+        <pre><form class="addpost" action="/fungus-influense/add_post.php" method="POST">
+            <input type="hidden" name="parentid" value="<?=$row['id']?>">
+            <input type="submit" name="btnparent" value="Add">
+        </pre>
     </div>
+    <?php } ?>
 </details>
 <?php endwhile; ?>
 
