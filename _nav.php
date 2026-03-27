@@ -1,4 +1,5 @@
     <nav>
+        <?php require_once("asset.php"); ?>
         <a href="index.php">Home</a>
         <a href="about.php">About</a>
         <div class="fill"></div>

@@ -6,10 +6,10 @@ $db_pass="";
 $db_name="fungusinfluence";
 $conn=mysqli_connect($db_host, $db_user, $db_pass, $db_name);
 
-function hasrated($drinkid){
+function hasrated($revid){
     global $conn;
     $userid=$_SESSION['id'];
-    $sql="SELECT * FROM tbl_reviews WHERE userid=$userid AND drinkid=$drinkid";
+    $sql="SELECT * FROM tbl_reviews WHERE userid=$userid AND revid=$revid";
     $result=mysqli_query($conn, $sql);
     if(mysqli_num_rows($result)>0){
         return true;
@@ -20,14 +20,14 @@ function hasrated($drinkid){
 
 
 
-function rateDrink($userrating, $drinkid){
+function rate($userrating, $revid, $revtype){
     $userid=$_SESSION['id'];
     global $conn;
-    if (!hasrated($drinkid)) {
-        $sql="INSERT INTO tbl_reviews (userid, score, drinkid) VALUES ($userid, $userrating, $drinkid)";
+    if (!hasrated($revid)) {
+        $sql="INSERT INTO tbl_reviews (userid, score, revid, revtype) VALUES ($userid, $userrating, $revid, $revtype)";
         
     } else {
-        $sql="UPDATE tbl_reviews SET score=$userrating WHERE userid=$userid AND drinkid=$drinkid"; 
+        $sql="UPDATE tbl_reviews SET score=$userrating WHERE userid=$userid AND revid=$revid AND revtype=$revtype"; 
         
     }
     mysqli_query($conn, $sql);
@@ -63,16 +63,16 @@ function isUserTaken($username){
         return false;
     }
 }
-function showpersonalscore($drinkid){
+function showpersonalscore($revid){
     global $conn;
     $userid=$_SESSION['id'];
-    $sql="SELECT score FROM tbl_reviews WHERE userid=$userid AND drinkid=$drinkid";
+    $sql="SELECT score FROM tbl_reviews WHERE userid=$userid AND revid=$revid";
     $result=mysqli_query($conn, $sql);
     if(mysqli_num_rows($result)>0){
         $row=mysqli_fetch_assoc($result);
         $retStr="";
         for($vdo=0;$vdo<$row['score'];$vdo++){
-            $retStr.="🫒";
+            $retStr.="⭐";
         }
         return $retStr;
     }else{
@@ -80,19 +80,19 @@ function showpersonalscore($drinkid){
     }
 }
 
-function showRating($drinkid){
+function showRating($revid){
     global $conn;
-    if (mysqli_num_rows(mysqli_query($conn, "SELECT * FROM tbl_reviews WHERE drinkid='$drinkid' LIMIT 1")) > 0) {
-        $sql="SELECT AVG(score) as rating FROM tbl_reviews WHERE drinkid='$drinkid'";
+    if (mysqli_num_rows(mysqli_query($conn, "SELECT * FROM tbl_reviews WHERE revid='$revid' LIMIT 1")) > 0) {
+        $sql="SELECT AVG(score) as rating FROM tbl_reviews WHERE revid='$revid'";
         $result=mysqli_query($conn, $sql);
         $row=mysqli_fetch_assoc($result);
         $rating=$row['rating'];
-        $sql="UPDATE tbl_drinks SET rating=$rating WHERE id=$drinkid";
+        $sql="UPDATE tbl_posts SET rating=$rating WHERE id=$revid";
         mysqli_query($conn, $sql);
         $number=intval(round($row['rating']));
         $retStr="";
         for($vdo=0;$vdo<$number;$vdo++){
-            $retStr.="🫒";
+            $retStr.="⭐";
         }
         return $retStr;
     } else {
@@ -118,6 +118,18 @@ function getUsername(){
     global $conn;
     $userid=$_SESSION['id'];
     $sql="SELECT username FROM tbl_user WHERE id=$userid";
+    $result=mysqli_query($conn, $sql);
+    $row=mysqli_fetch_assoc($result);
+    if(mysqli_num_rows($result)>0){
+        
+        return $row['username'];
+    }else{
+        return "Guest";
+    }
+}
+function getUsername2($uid){
+    global $conn;
+    $sql="SELECT username FROM tbl_user WHERE id=$uid";
     $result=mysqli_query($conn, $sql);
     $row=mysqli_fetch_assoc($result);
     if(mysqli_num_rows($result)>0){

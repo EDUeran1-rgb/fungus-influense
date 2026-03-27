@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <?php require_once("asset.php"); ?>
-<?php if(isset($_POST['userrating'])):rateDrink(intval($_POST['userrating']), intval($_POST['drinkid']));header("Location: index.php"); endif; ?>
+<?php if(isset($_POST['userrating'])):rate(intval($_POST['userrating']), intval($_POST['revid']), intval($_POST['revtype']));header("Location: index.php"); endif; ?>
 <?php
 $mess="";
 if(isset($_SESSION['mess'])){
@@ -27,9 +27,9 @@ if(isset($_SESSION['mess'])){
 <?php if (isLevel(10)) { ?>
     <a href="add_drink.php" class="addDrink">Add new drink!</a>
 <?php } ?>
-<!--
+
 <?php
-    $sql="SELECT * FROM tbl_drinks ORDER BY rating DESC"; 
+    $sql="SELECT * FROM tbl_posts ORDER BY rating DESC"; 
     $result=mysqli_query($conn, $sql);
 ?>
 <?php while($row=mysqli_fetch_assoc($result)): ?>
@@ -37,8 +37,8 @@ if(isset($_SESSION['mess'])){
 <details>
     <summary>
         <div>
-            <h2><?=$row['drinkname']?>&nbsp;&nbsp;<span><?=isAlcoholic(intval($row['alcoholic']))?></span></h2>
-            <h4><?=$row['description']?></h4></div> 
+            <h2><?=getUsername2($row['userid'])?></h2>
+            <h4><?=$row['text']?></h4></div> 
             
             <div class="filler"></div>
             <?php if (showRating($row['id']) !== false) { ?>
@@ -49,13 +49,14 @@ if(isset($_SESSION['mess'])){
             <?php if(islevel(10)) { ?>
                 <div id="ratearea">
                     <?php if(!hasrated($row['id'])){ 
-                        echo "<p>Rate this drink:</p>";
+                        echo "<p>Rate this:</p>";
                     }else{ 
-                        echo "<p>You have rated this drink:" . showpersonalscore($row['id']) . ".<br> Update your rating:</p>";
+                        echo "<p>You have rated this:" . showpersonalscore($row['id']) . ".<br> Update your rating:</p>";
                      } ?>
                     
                     <form class="rate-form" action="index.php" method="POST">
-                        <input type="hidden" name="drinkid" value="<?=$row['id']?>">
+                        <input type="hidden" name="revid" value="<?=$row['id']?>">
+                        <input type="hidden" name="revtype" value="post">
                         <button  name="userrating" value="1" class="rate">1</button>
                         <button  name="userrating" value="2" class="rate">2</button>
                         <button  name="userrating" value="3" class="rate">3</button>
@@ -68,14 +69,16 @@ if(isset($_SESSION['mess'])){
             <?php } ?>
     </summary>
     <div class="ingredients">
-        <pre><?=$row['ingredients']?></pre>
+        <pre></pre>
     </div>
     <div class="recipe">
-        <pre><?=$row['recipe']?></pre>
+        <pre></pre>
     </div>
 </details>
 <?php endwhile; ?>
--->
+
+    
+<?php require_once("_footer.php"); ?>
     <dialog id="login" popover>
         <form action="_login.php" method="POST">
             <label for="user">Username</label>
@@ -86,7 +89,5 @@ if(isset($_SESSION['mess'])){
         </form>
     </dialog>
     </main>
-<?php require_once("_footer.php"); ?>
-    
 </body>
 </html>
