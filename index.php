@@ -25,7 +25,7 @@ if(isset($_SESSION['mess'])){
     <main>
 <h1 class="message"><?=$mess;?></h1>
 <?php if (isLevel(10)) { ?>
-    <a href="add_drink.php" class="addDrink">Add new drink!</a>
+    <a href="add_post.php" class="addpost">Add new post!</a>
 <?php } ?>
 
 <?php
