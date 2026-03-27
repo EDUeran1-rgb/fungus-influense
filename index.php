@@ -27,6 +27,7 @@ if(isset($_SESSION['mess'])){
 <?php if (isLevel(10)) { ?>
     <a href="add_drink.php" class="addDrink">Add new drink!</a>
 <?php } ?>
+<!--
 <?php
     $sql="SELECT * FROM tbl_drinks ORDER BY rating DESC"; 
     $result=mysqli_query($conn, $sql);
@@ -74,7 +75,7 @@ if(isset($_SESSION['mess'])){
     </div>
 </details>
 <?php endwhile; ?>
-
+-->
     </main>
 <?php require_once("_footer.php"); ?>
     <dialog id="login" popover>
