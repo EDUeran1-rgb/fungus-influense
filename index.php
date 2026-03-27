@@ -76,8 +76,6 @@ if(isset($_SESSION['mess'])){
 </details>
 <?php endwhile; ?>
 -->
-    </main>
-<?php require_once("_footer.php"); ?>
     <dialog id="login" popover>
         <form action="_login.php" method="POST">
             <label for="user">Username</label>
@@ -87,5 +85,8 @@ if(isset($_SESSION['mess'])){
             <input type="submit" name="btn_login" value="Log in">
         </form>
     </dialog>
+    </main>
+<?php require_once("_footer.php"); ?>
+    
 </body>
 </html>
