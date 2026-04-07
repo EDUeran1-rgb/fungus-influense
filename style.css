@@ -240,7 +240,7 @@ a.addpost{
     border-radius:10px;
     width:fit-content;
     font:bold 1.4rem system-ui;
-    color:#000;
+    color:#000000;
     &:hover{
         background: #2266;
         color:#fff;
@@ -259,10 +259,38 @@ a.addpost{
     gap:.3rem;
     height:fit-content;
 }
+.comments{
+    display:flex;
+    flex-direction: column;
+    .filler{
+        place-content:right;
+        gap: .5rem; 
+    }
+    .rate-form{
+        flex-direction: row;
+        gap: .3rem;
+    }
+    .rate{
+        background: #0002;
+        border:1px solid #0006;
+        border-radius:10px;
+        width:fit-content;
+        font:bold 1.4rem system-ui;
+        color:#ff0000;
+        &:hover{
+            background: #2266;
+            color:#fff;
+        }
+    }
+}
 .comment{
     background: #0001;
     padding: .5rem;
     border-radius: .3rem;
     padding: 0rem;
+    border-color: red;
+    border-width: 2px;
+    border-style: solid;
+    margin:5px;
     
 }

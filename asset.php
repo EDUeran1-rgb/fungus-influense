@@ -31,6 +31,9 @@ function rate($userrating, $revid, $revtype){
         
     }
     mysqli_query($conn, $sql);
+    $date = new DateTime();
+    $sql = "UPDATE tbl_reviews SET rated = '{$date->format('Y-m-d H:i:s')}' WHERE id = $userid AND revid=$revid AND revtype=$revtype";
+    mysqli_query($conn, $sql);
     
 }
 
@@ -138,5 +141,11 @@ function getUsername2($uid){
     }else{
         return "Guest";
     }
+}
+function comment($revid, $text,$parnttype){
+    global $conn;
+    $userid=$_SESSION['id'];
+    $sql="INSERT INTO tbl_posts (userid, text, parentid, parenttype) VALUES ('$userid', '$text', $revid,'$parnttype')";
+    mysqli_query($conn, $sql);
 }
 ?>

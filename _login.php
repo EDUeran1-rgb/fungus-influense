@@ -20,6 +20,9 @@ if(isset($_POST['btn_login'])){
         $_SESSION['name']=$row['realname'];
         $_SESSION['level']=$row['userlevel'];
         $_SESSION['id']=$row['id'];
+        $date = new DateTime();
+        $sql = "UPDATE tbl_user SET last_login = '{$date->format('Y-m-d H:i:s')}' WHERE id = {$row['id']}";
+        mysqli_query($conn, $sql);
     }else{
         $_SESSION['mess']="Login failed! Wrong username or password.";
 

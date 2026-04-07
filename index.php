@@ -1,6 +1,14 @@
 <!DOCTYPE html>
 <?php require_once("asset.php"); ?>
-<?php if(isset($_POST['userrating'])):rate(intval($_POST['userrating']), intval($_POST['revid']), intval($_POST['revtype']));header("Location: index.php"); endif; ?>
+<?php if(isset($_POST['userrating'])):rate(intval($_POST['userrating']), intval($_POST['revid']), intval($_POST['revtype']));
+header("Location: index.php"); 
+endif;
+if(isset($_POST['btnparent'])){
+    comment(intval($_POST['parentid']), htmlentities($_POST['text']), 'none');
+    header("Location: index.php");
+}
+?>
+
 <?php
 $mess="";
 if(isset($_SESSION['mess'])){
@@ -37,16 +45,17 @@ if(isset($_SESSION['mess'])){
 <details>
     <summary>
         <div>
-            <h2><?=getUsername2($row['userid'])?></h2>
-            <h4><?=$row['text']?></h4></div> 
+            <h2><?=getUsername2($row['userid'])?> <?=$row['created']?></h2>
+            
+            <p><?=$row['text']?></p></div> 
             
             <div class="filler"></div>
+            <?php if(islevel(10)) { ?>
             <?php if (showRating($row['id']) !== false) { ?>
                 <div class="ratingdiv">Rated: <?=showRating($row['id'])?> </div> 
             <?php }else { ?>
                 <div class="ratingdiv">Not rated yet</div>
             <?php } ?>
-            <?php if(islevel(10)) { ?>
                 <div id="ratearea">
                     <?php if(!hasrated($row['id'])){ 
                         echo "<p>Rate this:</p>";
@@ -68,16 +77,19 @@ if(isset($_SESSION['mess'])){
                 </div>
             <?php } ?>
     </summary>
+    <?php if(islevel(10)) { ?>
     <div class="addcomment">
-        <pre><form class="addpost" action="add_post.php" method="POST">
+        <pre><form class="addpost" action="index.php" method="POST">
             <input type="hidden" name="parentid" value="<?=$row['id']?>">
+            <input type="text" name="text" placeholder="Add a comment" required>
             <input type="submit" name="btnparent" value="Add Comment">
         </pre>
     </div>
+    <?php } ?>
     <div class="comments">
-        <pre><?php
+        <?php
     $parid=$row['id'];
-    $sql2="SELECT * FROM tbl_posts WHERE parentid=$parid ORDER BY rating DESC"; 
+    $sql2="SELECT * FROM tbl_posts WHERE parentid=$parid ORDER BY created DESC"; 
     $result2=mysqli_query($conn, $sql2);
 ?>
 <?php while($row2=mysqli_fetch_assoc($result2)): ?>
@@ -85,16 +97,18 @@ if(isset($_SESSION['mess'])){
 <div class="comment">
     <div>
         <div>
-            <h2><?=getUsername2($row2['userid'])?></h2>
-            <h4><?=$row2['text']?></h4></div> 
+            <h2><?=getUsername2($row['userid'])?> <?=$row['created']?></h2>
             
-            <div class="filler"></div>
+            <p><?=$row['text']?></p></div> 
+            
+            <div class="filler">
+            <?php if(islevel(10)) { ?>
             <?php if (showRating($row2['id']) !== false) { ?>
                 <div class="ratingdiv">Rated: <?=showRating($row2['id'])?> </div> 
             <?php }else { ?>
                 <div class="ratingdiv">Not rated yet</div>
             <?php } ?>
-            <?php if(islevel(10)) { ?>
+            
                 <div id="ratearea">
                     <?php if(!hasrated($row2['id'])){ 
                         echo "<p>Rate this:</p>";
@@ -112,14 +126,14 @@ if(isset($_SESSION['mess'])){
                         <button  name="userrating" value="5" class="rate">5</button>
                     </form>
                     
-
+                </div>
                 </div>
             <?php }  ?>
         </div>
     </div>
 </div>
 <?php endwhile; ?>
-</pre>
+
     </div>
 </details>
 <?php endwhile;  ?>
