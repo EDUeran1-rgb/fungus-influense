@@ -17,6 +17,7 @@
 <?php require_once("_footer.php"); ?>
 <dialog id="login" popover>
         <form action="_login.php" method="POST">
+            <input type="hidden" name="thelink" value="about.php">
             <label for="user">Username</label>
             <input type="text" name="user" placeholder="Username" required>
             <label for="pass">Password</label>

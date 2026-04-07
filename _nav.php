@@ -2,6 +2,7 @@
         <?php require_once("asset.php"); ?>
         <a href="index.php">Home</a>
         <a href="about.php">About</a>
+        <a href="posts.php">Posts</a>
         <div class="fill"></div>
         <?php if(isLevel(1000)):?>
             <a href="useradmin.php">User Admin</a>

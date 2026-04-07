@@ -92,11 +92,19 @@ dialog form{
     display:grid;
     place-content: center;
 }
+.summary{
+    display:flex;
+    width:100%;
+    background: #0003;
+    padding: .5rem;
+    flex-direction: column;
+}
 summary{
     display:flex;
     width:100%;
     background: #0003;
     padding: .5rem;
+    flex-direction: column;
 }
 .filler{
     flex-grow: 5;
@@ -131,6 +139,35 @@ h1.mess{
 .mail a{
     font-size: 80%;
     text-decoration: none;
+}
+.details{
+    display:flex;
+    flex-direction: column;
+    background: #0001;
+    width:50%;
+    margin-left: auto;
+    margin-right: auto;
+    transition: all 0.05s ease-in-out;
+}
+.details .userdetails{
+    display:flex;
+    & .user{
+        flex-grow:unset;
+    }
+}
+.details .buttons{
+    display:flex;
+    gap:.5rem;
+    justify-content: flex-end;
+    padding: .5rem;
+    & a{
+        text-decoration: none;
+        background: #0003;
+        padding: .5rem;
+        border-radius: .5rem;}
+    & a:hover{
+        background: #0005;
+    }
 }
 details{
     display:flex;
@@ -262,25 +299,18 @@ a.addpost{
 .comments{
     display:flex;
     flex-direction: column;
-    .filler{
+    &.filler{
         place-content:right;
         gap: .5rem; 
     }
-    .rate-form{
+    &.rate-form{
         flex-direction: row;
         gap: .3rem;
     }
-    .rate{
-        background: #0002;
-        border:1px solid #0006;
-        border-radius:10px;
-        width:fit-content;
-        font:bold 1.4rem system-ui;
+    &.rate{
+        
         color:#ff0000;
-        &:hover{
-            background: #2266;
-            color:#fff;
-        }
+        
     }
 }
 .comment{

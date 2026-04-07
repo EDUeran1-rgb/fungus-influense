@@ -15,9 +15,10 @@ if(isset($_POST['btnAdd'])){
     $text=htmlentities($_POST['text']);
     $userid=$_SESSION['id'];
     $parentid=htmlentities($_POST['parentid']);
-    $sql="INSERT INTO tbl_posts (userid, text, parentid, parenttype ) VALUES ('$userid', '$text', $parentid,'none')";
+    $topic=htmlentities($_POST['topic']);
+    $sql="INSERT INTO tbl_posts (userid, text, parentid, parenttype, topic ) VALUES ('$userid', '$text', $parentid,'none', '$topic')";
     $result=mysqli_query($conn, $sql);
-    header("Location: index.php");
+    header("Location: posts.php");
 }
 
 
@@ -36,6 +37,7 @@ if(isset($_POST['btnAdd'])){
 <?php require_once("_nav.php"); ?>
     <main>
         <form action="add_post.php" method="POST">
+            <input type="text" name="topic" placeholder="Topic" required>
             <input type="text" name="text" placeholder="Text" required>
             <input type="hidden" name="parentid" value="<?=$parentid?>">
             <input type="submit" name="btnAdd" value="Add">
@@ -44,6 +46,7 @@ if(isset($_POST['btnAdd'])){
 <?php require_once("_footer.php"); ?>
     <dialog id="login" popover>
         <form action="_login.php" method="POST">
+            <input type="hidden" name="thelink" value="add_post.php">
             <label for="user">Username</label>
             <input type="text" name="user" placeholder="Username" required>
             <label for="pass">Password</label>
