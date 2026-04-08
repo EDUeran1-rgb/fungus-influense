@@ -11,7 +11,21 @@ if(isset($_POST['btn_reg'])){
     $password=md5($_POST['password']);
     $sql="INSERT INTO tbl_user(username, password, realname, mail) VALUES ('$username', '$password', '$realname', '$mail')";
     $result=mysqli_query($conn, $sql);
-    header("Location: register.php?reg=aac7d883b45&thelink=" . $_GET['thelink']);
+    $pass=md5($password);
+    $sql="SELECT * FROM tbl_user WHERE ((username='$username') AND (password='$pass'))";
+    $result=mysqli_query($conn, $sql);
+    if(mysqli_num_rows($result)===1){
+        $row=mysqli_fetch_assoc($result);
+        $_SESSION['mess']="thank you for registering a user! you have been logged in automatically.";
+        $_SESSION['name']=$row['realname'];
+        $_SESSION['level']=$row['userlevel'];
+        $_SESSION['id']=$row['id'];
+        $date = new DateTime();
+        $sql = "UPDATE tbl_user SET lastlogin = '{$date->format('Y-m-d H:i:s')}' WHERE id = {$row['id']}";
+        mysqli_query($conn, $sql);}else{
+            $_SESSION['mess']="thank you for registering a user! unfortunately we couldn't log you in automatically, please log in manually.";
+        }
+    header("Location: " . (isset($_GET['thelink']) ? urldecode($_GET['thelink']) : 'index.php'));
 }
 ?>
 <html lang="en">

@@ -32,7 +32,7 @@ if(isset($_POST['btnAdd'])){
 </head>
 <body>
     <header>
-        <h1>Drinks</h1>
+        <h1>Add post</h1>
     </header>
 <?php require_once("_nav.php"); ?>
     <main>
