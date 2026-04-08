@@ -44,7 +44,7 @@ if(isset($_POST['btnparent'])){
         $sql="SELECT * FROM tbl_posts WHERE parentid=$parid ORDER BY created ASC";  
         ?><a href="posts.php" class="addpost">Back</a><?php
 
-        echo"<h2>" . $topic .$parid. "</h2>";
+        echo"<h2>" . $topic . "</h2>";
         echo"<p>" . $text . "</p>";
         echo"<p>Posted by: " . getUsername2($theuid) . "</p>";
         if(showrating($parid) !== false){
