@@ -3,7 +3,7 @@
 <?php if(isset($_POST['userrating'])){
 rate(intval($_POST['userrating']), intval($_POST['revid']), intval($_POST['revtype']));
     if (isset($_POST['thepost'])or isset($_GET['thepost'])) {
-        header("Location: posts.php?thepost=" . (isset($_POST['thepost']) ? $_POST['thepost'] : $_GET['thepost']). "?thetopic=" . (isset($_POST['thetopic']) ? $_POST['thetopic'] : $_GET['thetopic']) . "&thetext=" . (isset($_POST['thetext']) ? $_POST['thetext'] : $_GET['thetext']) . "&theuid=" . (isset($_POST['theuid']) ? $_POST['theuid'] : $_GET['theuid']));
+        header("Location: posts.php?thepost=" . urlencode(isset($_POST['thepost']) ? $_POST['thepost'] : urldecode($_GET['thepost'])). "&thetopic=" . urlencode(isset($_POST['thetopic']) ? $_POST['thetopic'] : urldecode($_GET['thetopic'])) . "&thetext=" . urlencode(isset($_POST['thetext']) ? $_POST['thetext'] : urldecode($_GET['thetext'])) . "&theuid=" . urlencode(isset($_POST['theuid']) ? $_POST['theuid'] : urldecode($_GET['theuid'])));
     } else {
         header("Location: posts.php");
 }
@@ -12,7 +12,7 @@ rate(intval($_POST['userrating']), intval($_POST['revid']), intval($_POST['revty
 if(isset($_POST['btnparent'])){
     comment(intval($_POST['parentid']), htmlentities($_POST['text']), 'none');
     if (isset($_POST['thepost'])or isset($_GET['thepost'])) {
-        header("Location: posts.php?thepost=" . (isset($_POST['thepost']) ? $_POST['thepost'] : $_GET['thepost']). "?thetopic=" . (isset($_POST['thetopic']) ? $_POST['thetopic'] : $_GET['thetopic']) . "&thetext=" . (isset($_POST['thetext']) ? $_POST['thetext'] : $_GET['thetext']) . "&theuid=" . (isset($_POST['theuid']) ? $_POST['theuid'] : $_GET['theuid']));
+        header("Location: posts.php?thepost=" . urlencode(isset($_POST['thepost']) ? $_POST['thepost'] : urldecode($_GET['thepost'])). "&thetopic=" . urlencode(isset($_POST['thetopic']) ? $_POST['thetopic'] : urldecode($_GET['thetopic'])) . "&thetext=" . urlencode(isset($_POST['thetext']) ? $_POST['thetext'] : urldecode($_GET['thetext'])) . "&theuid=" . urlencode(isset($_POST['theuid']) ? $_POST['theuid'] : urldecode($_GET['theuid'])));
     } else {
         header("Location: posts.php");
 }
@@ -37,14 +37,14 @@ if(isset($_POST['btnparent'])){
 
 <?php
     if (isset($_POST['thepost']) or isset($_GET['thepost'])) {
-        $parid=isset($_POST['thepost']) ? $_POST['thepost'] : $_GET['thepost'];
-        $topic=isset($_POST['thetopic']) ? $_POST['thetopic'] : $_GET['thetopic'];
-        $text=isset($_POST['thetext']) ? $_POST['thetext'] : $_GET['thetext'];
-        $theuid=isset($_POST['theuid']) ? $_POST['theuid'] : $_GET['theuid'];
+        $parid=isset($_POST['thepost']) ? $_POST['thepost'] : (isset($_GET['thepost']) ? $_GET['thepost'] : 1);
+        $topic = isset($_POST['thetopic']) ? $_POST['thetopic'] : (isset($_GET['thetopic']) ? $_GET['thetopic'] : "err: this did not work :( for reasons trying to find out");
+        $text=isset($_POST['thetext']) ? $_POST['thetext'] : (isset($_GET['thetext']) ? $_GET['thetext'] : "err: this did not work :( for reasons trying to find out");
+        $theuid=isset($_POST['theuid']) ? $_POST['theuid'] : (isset($_GET['theuid']) ? $_GET['theuid'] : 1);
         $sql="SELECT * FROM tbl_posts WHERE parentid=$parid ORDER BY created ASC";  
         ?><a href="posts.php" class="addpost">Back</a><?php
 
-        echo"<h2>" . $topic . "</h2>";
+        echo"<h2>" . $topic .$parid. "</h2>";
         echo"<p>" . $text . "</p>";
         echo"<p>Posted by: " . getUsername2($theuid) . "</p>";
         if(showrating($parid) !== false){
@@ -53,7 +53,7 @@ if(isset($_POST['btnparent'])){
             echo"<p>Not rated yet</p>";
         }
         if(islevel(10)): ?>
-            <form class="rate-form" action="posts.php?thepost=<?=$parid?>" method="POST">
+            <form class="rate-form" action="posts.php?thepost=<?=urlencode($parid)?>&thetopic=<?=urlencode($topic)?>&thetext=<?=urlencode($text)?>&theuid=<?=urlencode($theuid)?>" method="POST">
                 <input type="hidden" name="thetopic" value="<?=$topic?>">
                 <input type="hidden" name="thetext" value="<?=$text?>">
                 <input type="hidden" name="theuid" value="<?=$theuid?>">
@@ -99,13 +99,16 @@ if(isset($_POST['btnparent'])){
                         echo "<p>You have rated this:" . showpersonalscore($row['id']) . ".<br> Update your rating:</p>";
                      } ?>
                     
-                    <form class="rate-form" action="posts.php" method="POST">
+                    
                         <?php if (isset($_POST['thepost'])or isset($_GET['thepost'])) { ?>
+                        <form class="rate-form" action="posts.php?thepost=<?=urlencode($parid)?>&thetopic=<?=urlencode($topic)?>&thetext=<?=urlencode($text)?>&theuid=<?=urlencode($theuid)?>" method="POST">
                         <input type="hidden" name="thetopic" value="<?=$topic?>">
                         <input type="hidden" name="thetext" value="<?=$text?>">
                         <input type="hidden" name="theuid" value="<?=$theuid?>">
                         <input type="hidden" name="revid" value="<?=$parid?>">
-                        <?php }  ?>
+                        <?php }else{  ?>
+                        <form class="rate-form" action="posts.php" method="POST">
+                        <?php } ?>
                         <input type="hidden" name="revid" value="<?=$row['id']?>">
                         <input type="hidden" name="revtype" value="post">
                         <button  name="userrating" value="1" class="rate">1</button>
@@ -135,7 +138,7 @@ if(isset($_POST['btnparent'])){
         if(islevel(10)) { ?>
             <div class="addcomment">
                 <pre>
-                    <form class="addpost" action="posts.php?thepost=<?=$parid?>" method="POST">
+                    <form class="addpost" action="posts.php?thepost=<?=urlencode($parid)?>&thetopic=<?=urlencode($topic)?>&thetext=<?=urlencode($text)?>&theuid=<?=urlencode($theuid)?>" method="POST">
                         
                         <input type="hidden" name="thetopic" value="<?=$topic?>">
                         <input type="hidden" name="thetext" value="<?=$text?>">
@@ -157,7 +160,7 @@ if(isset($_POST['btnparent'])){
     <dialog id="login" popover>
         <form action="_login.php" method="POST">
             <?php if (isset($_POST['thepost'])) { ?>
-                <input type="hidden" name="thelink" value="posts.php?thepost=<?=$_POST['thepost']?>">
+                <input type="hidden" name="thelink" value="posts.php?thepost=<?=urlencode($_POST['thepost'])?>&thetopic=<?=urlencode($_POST['thetopic'])?>&thetext=<?=urlencode($_POST['thetext'])?>&theuid=<?=urlencode($_POST['theuid'])?>">
             <?php } else { ?>
                 <input type="hidden" name="thelink" value="posts.php">
             <?php } ?>
