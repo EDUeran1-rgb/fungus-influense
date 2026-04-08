@@ -1,13 +1,21 @@
 <!DOCTYPE html>
 <?php require_once("asset.php"); ?>
 <?php if(isset($_POST['userrating'])):rate(intval($_POST['userrating']), intval($_POST['revid']), intval($_POST['revtype']));
+if (isset($_POST['thepost'])) {
+    header("Location: posts.php?thepost=" . $_POST['thepost']);
+} else {
+    header("Location: posts.php");
+}
 header("Location: posts.php"); 
 endif;
 if(isset($_POST['btnparent'])){
     comment(intval($_POST['parentid']), htmlentities($_POST['text']), 'none');
-    header("Location: posts.php");
+    if (isset($_POST['thepost'])) {
+        header("Location: posts.php?thepost=" . $_POST['thepost']);
+    } else {
+        header("Location: posts.php");
 }
-?>
+}?>
 
 
 <html lang="en">
@@ -28,7 +36,7 @@ if(isset($_POST['btnparent'])){
 
 <?php
     if (isset($_POST['thepost'])) {
-        $parid=intval($_POST['thepost']);
+        $parid=$_POST['thepost'];
         $sql="SELECT * FROM tbl_posts WHERE parentid=$parid ORDER BY created ASC";  
         ?><a href="posts.php" class="addpost">Back</a><?php
 
@@ -36,15 +44,16 @@ if(isset($_POST['btnparent'])){
         echo"<p>" . $_POST['thetext'] . "</p>";
         echo"<p>Posted by: " . getUsername2($_POST['theuid']) . "</p>";
         echo"<hr>rated: " . showRating($parid) . "<hr>";
-        ?><form class="rate-form" action="posts.php" method="POST">
-                        <input type="hidden" name="revid" value="<?=$_POST['thepost']?>">
-                        <input type="hidden" name="revtype" value="post">
-                        <button  name="userrating" value="1" class="rate">1</button>
-                        <button  name="userrating" value="2" class="rate">2</button>
-                        <button  name="userrating" value="3" class="rate">3</button>
-                        <button  name="userrating" value="4" class="rate">4</button>
-                        <button  name="userrating" value="5" class="rate">5</button>
-                    </form><?php
+        if(islevel(10)): ?>
+            <form class="rate-form" action="posts.php" method="POST">
+                <input type="hidden" name="revid" value="<?=$_POST['thepost']?>">
+                <input type="hidden" name="revtype" value="post">
+                <button  name="userrating" value="1" class="rate">1</button>
+                <button  name="userrating" value="2" class="rate">2</button>
+                <button  name="userrating" value="3" class="rate">3</button>
+                <button  name="userrating" value="4" class="rate">4</button>
+                <button  name="userrating" value="5" class="rate">5</button>
+            </form><?php endif;
     } else {
          if (isLevel(10)) { ?>
             <a href="add_post.php" class="addpost">Add new post!</a>
