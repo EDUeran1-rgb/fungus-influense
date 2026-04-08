@@ -32,7 +32,7 @@ if(isset($_SESSION['mess'])){
 <?php require_once("_nav.php"); ?>
     <main>
 <h1 class="message"><?=$mess;?></h1>
-<?php if (isLevel(10)) { ?>
+<?php/* if (isLevel(10)) { ?>
     <a href="add_post.php" class="addpost">Add new post!</a>
 <?php } ?>
 
@@ -139,7 +139,7 @@ if(isset($_SESSION['mess'])){
 
     </div>
 </details>
-<?php endwhile;  ?>
+<?php endwhile;  */?>
 
 
     
