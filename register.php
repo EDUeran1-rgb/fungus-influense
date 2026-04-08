@@ -2,7 +2,7 @@
 <?php require_once("asset.php"); ?>
 <?php
 if(isLevel(10)){ 
-    header("Location: index.php");
+    header("Location: " . (isset($_GET['thelink']) ? urldecode($_GET['thelink']) : 'index.php'));
 }
 if(isset($_POST['btn_reg'])){
     $username=$_POST['username'];
@@ -11,7 +11,7 @@ if(isset($_POST['btn_reg'])){
     $password=md5($_POST['password']);
     $sql="INSERT INTO tbl_user(username, password, realname, mail) VALUES ('$username', '$password', '$realname', '$mail')";
     $result=mysqli_query($conn, $sql);
-    header("Location: register.php?reg=aac7d883b45");
+    header("Location: register.php?reg=aac7d883b45&thelink=" . $_GET['thelink']);
 }
 ?>
 <html lang="en">
@@ -29,9 +29,9 @@ if(isset($_POST['btn_reg'])){
     <main>
     <?php if(isset($_GET['reg'])): ?>
             <h1>Thank you for registering a user!</h1>
-            <a href="index.php">Go to homepage</a>
+            <a href="<?=isset($_GET['thelink']) ? urldecode($_GET['thelink']) : 'index.php' ?>">Go to homepage</a>
     <?php else: ?>    
-    <form action="register.php" method="POST">
+    <form action="register.php?thelink=<?=$_GET['thelink']?>" method="POST">
         <label for="username">Username</label>
         <input type="text" name="username" id="username" placeholder="Preferred username" required >
         <label for="realname">Real Name</label>

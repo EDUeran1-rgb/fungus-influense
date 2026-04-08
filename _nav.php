@@ -9,7 +9,7 @@
             <a href="drinkadmin.php">Drink Admin</a>
         <?php endif; ?>
         <?php if(!isLevel(10)){?>
-        <a href="register.php">Register</a>
+        <a href="register.php?thelink=<?=urlencode($_SERVER['REQUEST_URI'])?>">Register</a>
         <button class="loginbttn" popovertarget="login">Login</button>
         <?php }else{ ?>
         <a href="_login.php?logout=1&thelink=<?=urlencode($_SERVER['REQUEST_URI'])?>">Logout</a>
