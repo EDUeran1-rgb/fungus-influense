@@ -52,12 +52,13 @@ if(isset($_POST['btnparent'])){
         } else {
             echo"<p>Not rated yet</p>";
         }
+        
+        if(islevel(10)): 
         if(!hasrated($parid)){
             echo "<p>Rate this:</p>";
             }else{
                 echo "<p>You have rated this:" . showpersonalscore($parid) . ".<br> Update your rating:</p>";
-            }
-        if(islevel(10)): ?>
+            }?>
             <form class="rate-form" action="posts.php?thepost=<?=urlencode($parid)?>&thetopic=<?=urlencode($topic)?>&thetext=<?=urlencode($text)?>&theuid=<?=urlencode($theuid)?>" method="POST">
                 <input type="hidden" name="thetopic" value="<?=$topic?>">
                 <input type="hidden" name="thetext" value="<?=$text?>">
@@ -160,7 +161,7 @@ if(isset($_POST['btnparent'])){
         <?php } ?>
     <?php } ?>
 
-    
+    </main>
 <?php require_once("_footer.php"); ?>
     <dialog id="login" popover>
         <form action="_login.php" method="POST">
@@ -176,6 +177,6 @@ if(isset($_POST['btnparent'])){
             <input type="submit" name="btn_login" value="Log in">
         </form>
     </dialog>
-    </main>
+    
 </body>
 </html>

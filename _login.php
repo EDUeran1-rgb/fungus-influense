@@ -6,7 +6,7 @@ if(isset($_GET['logout'])){
     $_SESSION['name']="";
     $_SESSION['level']="";
     $_SESSION['id']="";
-    header("Location: index.php");
+    header("Location: ".$_GET['thelink']);
 }
 
 if(isset($_POST['btn_login'])){
