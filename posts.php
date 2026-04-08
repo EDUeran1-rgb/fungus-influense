@@ -52,6 +52,11 @@ if(isset($_POST['btnparent'])){
         } else {
             echo"<p>Not rated yet</p>";
         }
+        if(!hasrated($parid)){
+            echo "<p>Rate this:</p>";
+            }else{
+                echo "<p>You have rated this:" . showpersonalscore($parid) . ".<br> Update your rating:</p>";
+            }
         if(islevel(10)): ?>
             <form class="rate-form" action="posts.php?thepost=<?=urlencode($parid)?>&thetopic=<?=urlencode($topic)?>&thetext=<?=urlencode($text)?>&theuid=<?=urlencode($theuid)?>" method="POST">
                 <input type="hidden" name="thetopic" value="<?=$topic?>">
