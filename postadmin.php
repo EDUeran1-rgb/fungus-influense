@@ -23,7 +23,7 @@ if(isset($_POST['btn_edit'])){
 
     $sql="UPDATE `tbl_drinks` SET `id`=$id,`drinkname`='$drink',`description`='$desc',`ingredients`='$ingr',`recipe`='$rec',`alcoholic`=$alc,`rating`=$rating WHERE id=$id";
     $result=mysqli_query($conn, $sql);
-    header("Location: drinkadmin.php");
+    header("Location: postadmin.php");
 }
 
 ?>

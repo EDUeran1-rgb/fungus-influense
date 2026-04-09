@@ -84,12 +84,13 @@ if(isset($_POST['btnparent'])){
     <summary>
         <div>
             
-            <h2><?=getUsername2($row['userid'])?> <?=$row['created']?></h2>
+            
                 <?php if (!isset($_POST['thepost']) && !isset($_GET['thepost'])) { ?>
-                    <p><?=$row['topic']?></p>
+                    <h2><?=$row['topic']?></h2>
                 <?php }else{ ?>
                     <p><?=$row['text']?></p> 
                 <?php } ?>
+                <p>By: <?=getUsername2($row['userid'])?> Posted: <?=$row['created']?></p>
         </div>
             <div class="filler"></div>
             <?php if(islevel(10)) { ?>
