@@ -37,10 +37,13 @@ if(isset($_POST['btnparent'])){
 
 <?php
     if (isset($_POST['thepost']) or isset($_GET['thepost'])) {
-        $parid=isset($_POST['thepost']) ? $_POST['thepost'] : (isset($_GET['thepost']) ? $_GET['thepost'] : 1);
-        $topic = isset($_POST['thetopic']) ? $_POST['thetopic'] : (isset($_GET['thetopic']) ? $_GET['thetopic'] : "err: this did not work :( for reasons trying to find out");
-        $text=isset($_POST['thetext']) ? $_POST['thetext'] : (isset($_GET['thetext']) ? $_GET['thetext'] : "err: this did not work :( for reasons trying to find out");
-        $theuid=isset($_POST['theuid']) ? $_POST['theuid'] : (isset($_GET['theuid']) ? $_GET['theuid'] : 1);
+        $sql2="SELECT * FROM tbl_posts WHERE id=" . (isset($_POST['thepost']) ? intval($_POST['thepost']) : intval($_GET['thepost']));
+        $result2=mysqli_query($conn, $sql2);
+        $row2=mysqli_fetch_assoc($result2);
+        $parid=$row2['parentid'];
+        $topic = $row2['topic'];
+        $text=$row2['text'];
+        $theuid=$row2['userid'];
         $sql="SELECT * FROM tbl_posts WHERE parentid=$parid ORDER BY created ASC";  
         ?><a href="posts.php" class="addpost">Back</a><?php
 
@@ -54,6 +57,9 @@ if(isset($_POST['btnparent'])){
         }
         
         if(islevel(10)): 
+            if($_SESSION['id'] == $theuid) { 
+                echo "<div><a href='postadmin.php?edit=" . $parid . "&thelink=" . urlencode($_SERVER['REQUEST_URI']) . "'>🖋️</a>&nbsp;&nbsp;<a href='postadmin.php?del=" . $parid . "&thelink=" . urlencode($_SERVER['REQUEST_URI']) . "'>❌</a></div>";
+            }; 
         if(!hasrated($parid)){
             echo "<p>Rate this:</p>";
             }else{
@@ -70,7 +76,11 @@ if(isset($_POST['btnparent'])){
                 <button  name="userrating" value="3" class="rate">3</button>
                 <button  name="userrating" value="4" class="rate">4</button>
                 <button  name="userrating" value="5" class="rate">5</button>
-            </form><?php endif;
+            </form>
+            
+            <?php 
+            
+            endif;
     } else {
          if (isLevel(10)) { ?>
             <a href="add_post.php" class="addpost">Add new post!</a>
@@ -126,7 +136,10 @@ if(isset($_POST['btnparent'])){
                     </form>
                 </div>
                 
-            <?php } ?>
+            <?php }
+            if($_SESSION['id'] == $row['userid']) { 
+                echo "<div><a href='postadmin.php?edit=" . $row['id'] . "&thelink=" . urlencode($_SERVER['REQUEST_URI']) . "'>🖋️</a>&nbsp;&nbsp;<a href='postadmin.php?del=" . $row['id'] . "&thelink=" . urlencode($_SERVER['REQUEST_URI']) . "'>❌</a></div>";
+            };  ?>
             <?php if (!isset($_POST['thepost']) && !isset($_GET['thepost'])) { ?>
                 <form action="posts.php" method="POST">
                     <input type="hidden" name="thetopic" value="<?=$row['topic']?>">
