@@ -1,9 +1,12 @@
 <!DOCTYPE html>
 <?php require_once("asset.php"); ?>
+<?php if(isset($_POST['thepost']) or isset($_GET['thepost'])){
+    $thepost=intval(urldecode(isset($_POST['thepost']) ? $_POST['thepost'] : $_GET['thepost']));
+}?>
 <?php if(isset($_POST['userrating'])){
 rate(intval($_POST['userrating']), intval($_POST['revid']), intval($_POST['revtype']));
-    if (isset($_POST['thepost'])or isset($_GET['thepost'])) {
-        header("Location: posts.php?thepost=" . urlencode(isset($_POST['thepost']) ? $_POST['thepost'] : urldecode($_GET['thepost'])). "&thetopic=" . urlencode(isset($_POST['thetopic']) ? $_POST['thetopic'] : urldecode($_GET['thetopic'])) . "&thetext=" . urlencode(isset($_POST['thetext']) ? $_POST['thetext'] : urldecode($_GET['thetext'])) . "&theuid=" . urlencode(isset($_POST['theuid']) ? $_POST['theuid'] : urldecode($_GET['theuid'])));
+    if (isset($thepost)) {
+        header("Location: posts.php?thepost=" . urlencode($thepost));
     } else {
         header("Location: posts.php");
 }
@@ -11,8 +14,8 @@ rate(intval($_POST['userrating']), intval($_POST['revid']), intval($_POST['revty
 
 if(isset($_POST['btnparent'])){
     comment(intval($_POST['parentid']), htmlentities($_POST['text']), 'none');
-    if (isset($_POST['thepost'])or isset($_GET['thepost'])) {
-        header("Location: posts.php?thepost=" . urlencode(isset($_POST['thepost']) ? $_POST['thepost'] : urldecode($_GET['thepost'])). "&thetopic=" . urlencode(isset($_POST['thetopic']) ? $_POST['thetopic'] : urldecode($_GET['thetopic'])) . "&thetext=" . urlencode(isset($_POST['thetext']) ? $_POST['thetext'] : urldecode($_GET['thetext'])) . "&theuid=" . urlencode(isset($_POST['theuid']) ? $_POST['theuid'] : urldecode($_GET['theuid'])));
+    if (isset($thepost)) {
+        header("Location: posts.php?thepost=" . urlencode($thepost));
     } else {
         header("Location: posts.php");
 }
@@ -36,40 +39,43 @@ if(isset($_POST['btnparent'])){
 
 
 <?php
-    if (isset($_POST['thepost']) or isset($_GET['thepost'])) {
-        $sql2="SELECT * FROM tbl_posts WHERE id=" . (isset($_POST['thepost']) ? intval($_POST['thepost']) : intval($_GET['thepost']));
-        $result2=mysqli_query($conn, $sql2);
-        $row2=mysqli_fetch_assoc($result2);
-        $parid=$row2['parentid'];
-        $topic = $row2['topic'];
-        $text=$row2['text'];
-        $theuid=$row2['userid'];
-        $sql="SELECT * FROM tbl_posts WHERE parentid=$parid ORDER BY created ASC";  
+    if (isset($thepost)) {
+        $sql="SELECT * FROM tbl_posts WHERE id=$thepost";
+        $result=mysqli_query($conn, $sql);
+        $row=mysqli_fetch_assoc($result);
+        if($row){
+            $parid=$row['parentid'];
+            $topic = $row['topic'];
+            $text=$row['text'];
+            $theuid=$row['userid'];
+        } else {
+            echo "<p>Post not found.</p>";
+            exit;
+        }
+
+        $sql="SELECT * FROM tbl_posts WHERE parentid=$thepost ORDER BY created ASC";  
         ?><a href="posts.php" class="addpost">Back</a><?php
 
         echo"<h2>" . $topic . "</h2>";
         echo"<p>" . $text . "</p>";
         echo"<p>Posted by: " . getUsername2($theuid) . "</p>";
-        if(showrating($parid) !== false){
-            echo"<p>Rating: " . showRating($parid) . "</p>";
+        if(showrating($thepost) !== false){
+            echo"<p>Rating: " . showRating($thepost) . "</p>";
         } else {
             echo"<p>Not rated yet</p>";
         }
         
         if(islevel(10)): 
             if($_SESSION['id'] == $theuid) { 
-                echo "<div><a href='postadmin.php?edit=" . $parid . "&thelink=" . urlencode($_SERVER['REQUEST_URI']) . "'>🖋️</a>&nbsp;&nbsp;<a href='postadmin.php?del=" . $parid . "&thelink=" . urlencode($_SERVER['REQUEST_URI']) . "'>❌</a></div>";
+                echo "<div><a href='postadmin.php?edit=" . $thepost . "&thelink=" . urlencode("posts.php") . "'>🖋️</a>&nbsp;&nbsp;<a href='postadmin.php?del=" . $thepost . "&thelink=" . urlencode("posts.php") . "'>❌</a></div>";
             }; 
-        if(!hasrated($parid)){
+        if(!hasrated($thepost)){
             echo "<p>Rate this:</p>";
             }else{
-                echo "<p>You have rated this:" . showpersonalscore($parid) . ".<br> Update your rating:</p>";
+                echo "<p>You have rated this:" . showpersonalscore($thepost) . ".<br> Update your rating:</p>";
             }?>
-            <form class="rate-form" action="posts.php?thepost=<?=urlencode($parid)?>&thetopic=<?=urlencode($topic)?>&thetext=<?=urlencode($text)?>&theuid=<?=urlencode($theuid)?>" method="POST">
-                <input type="hidden" name="thetopic" value="<?=$topic?>">
-                <input type="hidden" name="thetext" value="<?=$text?>">
-                <input type="hidden" name="theuid" value="<?=$theuid?>">
-                <input type="hidden" name="revid" value="<?=$parid?>">
+            <form class="rate-form" action="posts.php?thepost=<?=urlencode($thepost)?>" method="POST">
+                <input type="hidden" name="revid" value="<?=$thepost?>">
                 <input type="hidden" name="revtype" value="post">
                 <button  name="userrating" value="1" class="rate">1</button>
                 <button  name="userrating" value="2" class="rate">2</button>
@@ -95,7 +101,7 @@ if(isset($_POST['btnparent'])){
         <div>
             
             
-                <?php if (!isset($_POST['thepost']) && !isset($_GET['thepost'])) { ?>
+                <?php if (!isset($thepost)) { ?>
                     <h2><?=$row['topic']?></h2>
                 <?php }else{ ?>
                     <p><?=$row['text']?></p> 
@@ -103,12 +109,16 @@ if(isset($_POST['btnparent'])){
                 <p>By: <?=getUsername2($row['userid'])?> Posted: <?=$row['created']?></p>
         </div>
             <div class="filler"></div>
-            <?php if(islevel(10)) { ?>
+            
             <?php if (showRating($row['id']) !== false) { ?>
                 <div class="ratingdiv">Rated: <?=showRating($row['id'])?> </div> 
             <?php }else { ?>
                 <div class="ratingdiv">Not rated yet</div>
             <?php } ?>
+            <?php if(islevel(10)) { 
+                if($_SESSION['id'] == $row['userid']) { 
+                echo "<div><a href='postadmin.php?edit=" . $row['id'] . "&thelink=" . urlencode("posts.php") . "'>🖋️</a>&nbsp;&nbsp;<a href='postadmin.php?del=" . $row['id'] . "&thelink=" . urlencode("posts.php") . "'>❌</a></div>";
+                };?>
                 <div id="ratearea">
                     <?php if(!hasrated($row['id'])){ 
                         echo "<p>Rate this:</p>";
@@ -117,12 +127,8 @@ if(isset($_POST['btnparent'])){
                      } ?>
                     
                     
-                        <?php if (isset($_POST['thepost'])or isset($_GET['thepost'])) { ?>
-                        <form class="rate-form" action="posts.php?thepost=<?=urlencode($parid)?>&thetopic=<?=urlencode($topic)?>&thetext=<?=urlencode($text)?>&theuid=<?=urlencode($theuid)?>" method="POST">
-                        <input type="hidden" name="thetopic" value="<?=$topic?>">
-                        <input type="hidden" name="thetext" value="<?=$text?>">
-                        <input type="hidden" name="theuid" value="<?=$theuid?>">
-                        <input type="hidden" name="revid" value="<?=$parid?>">
+                        <?php if (isset($thepost)) { ?>
+                        <form class="rate-form" action="posts.php?thepost=<?=urlencode($thepost)?>" method="POST">
                         <?php }else{  ?>
                         <form class="rate-form" action="posts.php" method="POST">
                         <?php } ?>
@@ -136,11 +142,8 @@ if(isset($_POST['btnparent'])){
                     </form>
                 </div>
                 
-            <?php }
-            if($_SESSION['id'] == $row['userid']) { 
-                echo "<div><a href='postadmin.php?edit=" . $row['id'] . "&thelink=" . urlencode($_SERVER['REQUEST_URI']) . "'>🖋️</a>&nbsp;&nbsp;<a href='postadmin.php?del=" . $row['id'] . "&thelink=" . urlencode($_SERVER['REQUEST_URI']) . "'>❌</a></div>";
-            };  ?>
-            <?php if (!isset($_POST['thepost']) && !isset($_GET['thepost'])) { ?>
+            <?php }  ?>
+            <?php if (!isset($thepost)) {?>
                 <form action="posts.php" method="POST">
                     <input type="hidden" name="thetopic" value="<?=$row['topic']?>">
                     <input type="hidden" name="thetext" value="<?=$row['text']?>">
@@ -154,19 +157,12 @@ if(isset($_POST['btnparent'])){
     </summary>
 </details>
 <?php endwhile;  ?>
-<?php if (isset($_POST['thepost'])or isset($_GET['thepost'])) { 
+<?php if (isset($thepost)) { 
         if(islevel(10)) { ?>
             <div class="addcomment">
                 <pre>
-                    <form class="addpost" action="posts.php?thepost=<?=urlencode($parid)?>&thetopic=<?=urlencode($topic)?>&thetext=<?=urlencode($text)?>&theuid=<?=urlencode($theuid)?>" method="POST">
-                        
-                        <input type="hidden" name="thetopic" value="<?=$topic?>">
-                        <input type="hidden" name="thetext" value="<?=$text?>">
-                        <input type="hidden" name="theuid" value="<?=$theuid?>">
-                        <input type="hidden" name="revid" value="<?=$parid?>">
-                        
-                        <input type="hidden" name="parentid" value="<?=$parid?>">
-                        <input type="hidden" name="thepost" value="<?=$parid?>">
+                    <form class="addpost" action="posts.php?thepost=<?=urlencode($thepost)?>" method="POST">
+                        <input type="hidden" name="parentid" value="<?=$thepost?>">
                         <input type="text" name="text" placeholder="Add a comment" required>
                         <input type="submit" name="btnparent" value="Add Comment">
                     </form>
@@ -179,8 +175,8 @@ if(isset($_POST['btnparent'])){
 <?php require_once("_footer.php"); ?>
     <dialog id="login" popover>
         <form action="_login.php" method="POST">
-            <?php if (isset($_POST['thepost'])) { ?>
-                <input type="hidden" name="thelink" value="posts.php?thepost=<?=urlencode($_POST['thepost'])?>&thetopic=<?=urlencode($_POST['thetopic'])?>&thetext=<?=urlencode($_POST['thetext'])?>&theuid=<?=urlencode($_POST['theuid'])?>">
+            <?php if (isset($thepost)) { ?>
+                <input type="hidden" name="thelink" value="posts.php?thepost=<?=urlencode($thepost)?>">
             <?php } else { ?>
                 <input type="hidden" name="thelink" value="posts.php">
             <?php } ?>
