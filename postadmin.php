@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <?php require_once("asset.php"); ?>
 <?php
-if(!isLevel(1000)){ 
+if(!isLevel(1000) and !(isset($_GET['thelink']))){ 
     header("Location: index.php");
 }
 if(isset($_GET['del'])){
@@ -11,7 +11,7 @@ if(isset($_GET['del'])){
     $sql="DELETE FROM tbl_reviews WHERE revid=$id";
     $result=mysqli_query($conn, $sql);
     if (isset($_GET['thelink'])) {
-        header("Location: " . urldecode($_GET['thelink']));
+        header("Location: " . urldecode($_GET['thelink']). "?thepost=" . urlencode($id));
     } else {
         header("Location: postadmin.php");
     }
@@ -24,9 +24,12 @@ if(isset($_POST['btn_edit'])){
 
     $sql="UPDATE `tbl_posts` SET `id`=$id,`topic`='$topic',`text`='$text' WHERE id=$id";
     $result=mysqli_query($conn, $sql);
+    $sql="SELECT * FROM tbl_posts WHERE id=$id";
+    $result=mysqli_query($conn, $sql);
+    $parid=mysqli_fetch_assoc($result)['parentid'];
     if (isset($_POST['thelink'])) {
         
-        header("Location: " . urldecode($_POST['thelink']));
+        header("Location: " . urldecode($_POST['thelink']). "?thepost=" . urlencode($parid));
     } else {
         header("Location: postadmin.php");
     }
