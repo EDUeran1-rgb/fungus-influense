@@ -12,7 +12,7 @@ if(isset($_POST['btn_reg'])){
     $sql="INSERT INTO tbl_user(username, password, realname, mail) VALUES ('$username', '$password', '$realname', '$mail')";
     $result=mysqli_query($conn, $sql);
     $pass=md5($password);
-    $sql="SELECT * FROM tbl_user WHERE ((username='$username') AND (password='$pass'))";
+    $sql="SELECT * FROM tbl_user WHERE ((username='$username') AND (password='$password'))";
     $result=mysqli_query($conn, $sql);
     if(mysqli_num_rows($result)===1){
         $row=mysqli_fetch_assoc($result);
@@ -22,9 +22,10 @@ if(isset($_POST['btn_reg'])){
         $_SESSION['id']=$row['id'];
         $date = new DateTime();
         $sql = "UPDATE tbl_user SET lastlogin = '{$date->format('Y-m-d H:i:s')}' WHERE id = {$row['id']}";
-        mysqli_query($conn, $sql);}else{
-            $_SESSION['mess']="thank you for registering a user! unfortunately we couldn't log you in automatically, please log in manually.";
-        }
+        mysqli_query($conn, $sql);
+    }else{
+        $_SESSION['mess']="thank you for registering a user! unfortunately we couldn't log you in automatically, please log in manually.";
+    }
     header("Location: " . (isset($_GET['thelink']) ? urldecode($_GET['thelink']) : 'index.php'));
 }
 ?>
