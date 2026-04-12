@@ -93,8 +93,10 @@ if(isset($_POST['btn_edit'])){
 <details>
     <summary>
         <div>
-            <h2><?=$row['topic']?>&nbsp;&nbsp;<span></span></h2>
-            <h4><?=$row['text']?></h4></div> 
+            <?php if($row['parentid']==0){
+                ?><h2 class="headtopic"><?=$row['topic']?>&nbsp;&nbsp;<span></span></h2><?php
+            }?>
+            <h4 class="commenttext"><?=$row['text']?></h4></div> 
             <div class="filler"></div>
             <?php if (showRating($row['id']) !== false) {
                 $rating2 = "Rated:" . showRating($row['id']);
