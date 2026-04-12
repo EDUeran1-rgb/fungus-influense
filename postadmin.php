@@ -28,8 +28,11 @@ if(isset($_POST['btn_edit'])){
     $result=mysqli_query($conn, $sql);
     $parid=mysqli_fetch_assoc($result)['parentid'];
     if (isset($_POST['thelink'])) {
-        
-        header("Location: " . urldecode($_POST['thelink']). "?thepost=" . urlencode($parid));
+        if ($parid == 0) {
+            header("Location: " . urldecode($_POST['thelink']). "?thepost=" . urlencode($id));
+        } else {
+            header("Location: " . urldecode($_POST['thelink']). "?thepost=" . urlencode($parid));
+        }
     } else {
         header("Location: postadmin.php");
     }

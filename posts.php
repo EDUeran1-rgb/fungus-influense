@@ -37,7 +37,7 @@ if(isset($_POST['btnparent'])){
     <main>
 
 
-
+<div class="headpost">
 <?php
     if (isset($thepost)) {
         $sql="SELECT * FROM tbl_posts WHERE id=$thepost";
@@ -56,9 +56,9 @@ if(isset($_POST['btnparent'])){
         $sql="SELECT * FROM tbl_posts WHERE parentid=$thepost ORDER BY created ASC";  
         ?><a href="posts.php" class="addpost">Back</a><?php
 
-        echo"<h2>" . $topic . "</h2>";
-        echo"<p>" . $text . "</p>";
-        echo"<p>Posted by: " . getUsername2($theuid) . "</p>";
+        echo"<h2 class='headtopic'>" . $topic . "</h2>";
+        echo"<p class='headtext'>" . $text . "</p>";
+        echo"<p>Posted by: " . getUsername2($theuid) . " Posted: " . $row['created'] . "</p>";
         if(showrating($thepost) !== false){
             echo"<p>Rating: " . showRating($thepost) . "</p>";
         } else {
@@ -95,7 +95,7 @@ if(isset($_POST['btnparent'])){
     }
     $result=mysqli_query($conn, $sql);
     while($row=mysqli_fetch_assoc($result)): ?>
-
+    </div>
 <details>
     <summary>
         <div>
@@ -104,7 +104,7 @@ if(isset($_POST['btnparent'])){
                 <?php if (!isset($thepost)) { ?>
                     <h2><?=$row['topic']?></h2>
                 <?php }else{ ?>
-                    <p><?=$row['text']?></p> 
+                    <p class="commenttext"><?=$row['text']?></p> 
                 <?php } ?>
                 <p>By: <?=getUsername2($row['userid'])?> Posted: <?=$row['created']?></p>
         </div>

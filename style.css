@@ -257,6 +257,35 @@ button {
     margin-top: .6rem;
 }
 
+.headpost{
+    padding:0.6rem;
+    border-bottom: #0003 solid 5px;
+    height: fit-content;
+}
+.headtopic{
+    padding-top:10px;
+    width:100%;
+    word-wrap: break-word;     
+    overflow-wrap: break-word; 
+    word-break: break-word;    
+    white-space: normal;
+}
+.commenttext{
+    width: 100%;
+    word-wrap: break-word; 
+    overflow-wrap: break-word; 
+    word-break: break-word;    
+    white-space: normal;
+}
+
+.headtext{
+    width: 100%;
+    word-wrap: break-word; 
+    overflow-wrap: break-word; 
+    word-break: break-word;    
+    white-space: normal;
+}
+
 a.addpost{
     text-decoration: none;
     padding: .6rem 1rem;
@@ -284,6 +313,7 @@ a.addpost{
     }
 }
 .rate-form{
+    
     position: relative;
     padding: none;
     background: none;
@@ -295,6 +325,7 @@ a.addpost{
     flex-direction: row;
     gap:.3rem;
     height:fit-content;
+    
 }
 .comments{
     display:flex;
