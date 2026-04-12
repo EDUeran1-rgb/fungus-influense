@@ -6,12 +6,16 @@ if(!isLevel(1000) and !(isset($_GET['thelink']))){
 }
 if(isset($_GET['del'])){
     $id=intval($_GET['del']);
+    $sql="SELECT parentid FROM tbl_posts WHERE id=$id";
+    $result=mysqli_query($conn, $sql);
+    $parid=mysqli_fetch_assoc($result)['parentid'];
     $sql="DELETE FROM tbl_posts WHERE id=$id OR parentid=$id";
     $result=mysqli_query($conn, $sql);
     $sql="DELETE FROM tbl_reviews WHERE revid=$id";
     $result=mysqli_query($conn, $sql);
+    
     if (isset($_GET['thelink'])) {
-        header("Location: " . urldecode($_GET['thelink']). "?thepost=" . urlencode($id));
+        header("Location: " . urldecode($_GET['thelink']). "?thepost=" . urlencode($parid));
     } else {
         header("Location: postadmin.php");
     }
