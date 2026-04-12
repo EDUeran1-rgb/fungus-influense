@@ -56,15 +56,23 @@ if(isset($_POST['btn_edit'])){
                 $sql="SELECT * FROM tbl_posts WHERE id=$id";
                 $result=mysqli_query($conn, $sql);
                 $row=mysqli_fetch_assoc($result);
+                $parid=$row['parentid'];
                 
 
             ?>
         <form action="postadmin.php" method="POST">
             <input type="hidden" name="id" value="<?=$id?>">
             <input type="hidden" name="thelink" value="<?=$link?>">
-            <div class="user_data"> Post id: <?=$id?><br> Topic: <?=$row['topic']?><br> Text: <?=$row['text']?><br> Rated: <?= $row['rating']?></div>
+            <div class="user_data"> Post id: <?=$id?>
+            <?php if($parid==0){?>   
+            <br> Topic: <?=$row['topic']?>
+            <?php } ?>
+            <br> Text: <?=$row['text']?><br> Rated: <?= $row['rating']?></div>
+            <?php if($parid==0){?>   
             <label for="topic">Topic:</label>
             <input type="text" name="topic" id="topic" value="<?=$row['topic']?>">
+            <?php } ?>
+            
             <label for="text">Text:</label>
             <input type="text" name="text" id="text" value="<?=$row['text']?>">
             <input type="submit" name="btn_edit" value="Update Post">
