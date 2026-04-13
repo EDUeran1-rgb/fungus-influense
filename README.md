@@ -1,2 +1,2 @@
-# fungus-influense
-fungus influence uppgift
+# chattforum-slutprojekt
+slutprojekt uppgiften
